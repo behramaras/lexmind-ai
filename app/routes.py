@@ -13,6 +13,11 @@ SYSTEM_PROMPT = """Sen LexMind'ın hukuki asistanısın. Yalnızca Türk hukuku 
 Cevapların açık, anlaşılır ve Türkçe olmalı. Her cevabın sonunda hukuki tavsiye vermediğini, 
 yalnızca bilgi sunduğunu belirt."""
 
+@main.route("/")
+def index():
+    return render_template("index.html")
+
+
 @main.route("/logout")
 @login_required
 def logout():
