@@ -34,6 +34,21 @@ def register():
     
     return render_template("register.html")
 
+@main.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        user = User.query.filter_by(username=username).first()
+        
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            return redirect(url_for("main.chat"))
+        
+        return render_template("login.html", error="Kullanıcı adı veya şifre hatalı.")
+    
+    return render_template("login.html")
+
 @main.route("/logout")
 @login_required
 def logout():
