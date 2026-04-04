@@ -78,3 +78,9 @@ def chat():
         db.session.commit()
     
     return render_template("chat.html", answer=answer)
+
+@main.route("/history")
+@login_required
+def history():
+    chats = Chat.query.filter_by(user_id=current_user.id).order_by(Chat.created_at.desc()).all()
+    return render_template("history.html", chats=chats)
