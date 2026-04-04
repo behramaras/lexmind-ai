@@ -54,3 +54,27 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("main.index"))
+
+@main.route("/chat", methods=["GET", "POST"])
+@login_required
+def chat():
+    answer = None
+    if request.method == "POST":
+        question = request.form.get("question")
+        
+        response = requests.post(OLLAMA_URL, json={
+            "model": MODEL,
+            "messages": [
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": question}
+            ],
+            "stream": False
+        })
+        
+        answer = response.json()["message"]["content"]
+        
+        chat = Chat(user_id=current_user.id, question=question, answer=answer)
+        db.session.add(chat)
+        db.session.commit()
+    
+    return render_template("chat.html", answer=answer)
