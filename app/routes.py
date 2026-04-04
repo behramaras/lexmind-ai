@@ -12,3 +12,9 @@ MODEL = "gemma3:4b"
 SYSTEM_PROMPT = """Sen LexMind'ın hukuki asistanısın. Yalnızca Türk hukuku hakkında sorulara cevap veriyorsun. 
 Cevapların açık, anlaşılır ve Türkçe olmalı. Her cevabın sonunda hukuki tavsiye vermediğini, 
 yalnızca bilgi sunduğunu belirt."""
+
+@main.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("main.index"))
