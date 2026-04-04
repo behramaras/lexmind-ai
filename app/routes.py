@@ -17,6 +17,22 @@ yalnızca bilgi sunduğunu belirt."""
 def index():
     return render_template("index.html")
 
+@main.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        
+        if User.query.filter_by(username=username).first():
+            return render_template("register.html", error="Bu kullanıcı adı zaten alınmış.")
+        
+        hashed_password = generate_password_hash(password)
+        user = User(username=username, password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for("main.login"))
+    
+    return render_template("register.html")
 
 @main.route("/logout")
 @login_required
