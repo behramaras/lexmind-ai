@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LexMind</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #F7F0E3; color: #2a1810; min-height: 100vh; }
+    a { text-decoration: none; color: inherit; }
+
+    /* NAV */
+    nav { background: #6B1E2E; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; color: #F7F0E3; letter-spacing: 0.02em; }
+    .nav-logo-icon { width: 30px; height: 30px; border-radius: 8px; background: #C8A96E; display: flex; align-items: center; justify-content: center; }
+    .nav-logo-icon svg { width: 16px; height: 16px; fill: #6B1E2E; }
+    .nav-links { display: flex; gap: 6px; }
+    .nav-link { padding: 6px 14px; border-radius: 99px; font-size: 13px; color: #c8a0a8; transition: all 0.15s; }
+    .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.12); color: #F7F0E3; }
+
+    /* FLASH MESSAGES */
+    .flash { padding: 12px 24px; font-size: 13px; text-align: center; }
+    .flash.error { background: #f0d0d0; color: #8B1A1A; }
+    .flash.success { background: #d0e8d0; color: #1A5C1A; }
+
+    /* FOOTER */
+    footer { text-align: center; padding: 16px; font-size: 11px; color: #a09070; border-top: 0.5px solid #d8cdb8; margin-top: auto; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+      </div>
+      LexMind
+    </a>
+    <div class="nav-links">
+      {% if current_user.is_authenticated %}
+        <a href="/chat" class="nav-link {% if request.path == '/chat' %}active{% endif %}">Sohbet</a>
+        <a href="/history" class="nav-link {% if request.path == '/history' %}active{% endif %}">Geçmiş</a>
+        <a href="/logout" class="nav-link">Çıkış</a>
+      {% else %}
+        <a href="/login" class="nav-link {% if request.path == '/login' %}active{% endif %}">Giriş</a>
+        <a href="/register" class="nav-link {% if request.path == '/register' %}active{% endif %}">Kayıt ol</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  {% if error %}
+    <div class="flash error">{{ error }}</div>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+
+  <footer>LexMind · Türk Hukuku Bilgi Asistanı · Hukuki tavsiye vermez</footer>
+</body>
+</html>
