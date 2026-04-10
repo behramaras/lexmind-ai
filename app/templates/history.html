@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .dash-wrap { max-width: 1000px; margin: 0 auto; padding: 32px 24px; }
+  .dash-header { margin-bottom: 28px; }
+  .dash-title { font-size: 22px; font-weight: 500; color: #2a1810; margin-bottom: 6px; }
+  .dash-sub { font-size: 13px; color: #906050; }
+
+  /* İSTATİSTİKLER */
+  .stats { display: flex; gap: 14px; margin-bottom: 32px; }
+  .stat { flex: 1; padding: 16px 20px; background: #fff; border-radius: 12px; border: 0.5px solid #d8cdb8; }
+  .stat-label { font-size: 11px; color: #a09070; margin-bottom: 6px; letter-spacing: 0.03em; }
+  .stat-val { font-size: 26px; font-weight: 500; color: #6B1E2E; }
+  .stat-sub { font-size: 11px; color: #b0a080; margin-top: 3px; }
+
+  /* GEÇMİŞ LİSTESİ */
+  .history-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .history-title { font-size: 14px; font-weight: 500; color: #2a1810; }
+  .history-count { font-size: 12px; color: #a09070; }
+  .history-list { display: flex; flex-direction: column; gap: 10px; }
+  .history-item { background: #fff; border: 0.5px solid #d8cdb8; border-radius: 12px; padding: 18px 20px; display: flex; gap: 16px; align-items: flex-start; transition: border 0.15s; }
+  .history-item:hover { border-color: #6B1E2E; }
+  .history-num { font-size: 12px; color: #c8b898; font-weight: 500; min-width: 24px; margin-top: 2px; }
+  .history-content { flex: 1; }
+  .history-q { font-size: 14px; color: #2a1810; margin-bottom: 8px; font-weight: 500; }
+  .history-a { font-size: 13px; color: #806050; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .history-meta { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+  .history-date { font-size: 11px; color: #b0a080; }
+  .history-badge { font-size: 10px; padding: 2px 10px; border-radius: 99px; background: #f0e0d0; color: #8B3E2E; }
+
+  /* BOŞ DURUM */
+  .empty { text-align: center; padding: 60px 20px; }
+  .empty-icon { font-size: 40px; margin-bottom: 16px; }
+  .empty-title { font-size: 16px; font-weight: 500; color: #2a1810; margin-bottom: 8px; }
+  .empty-sub { font-size: 13px; color: #906050; margin-bottom: 24px; }
+  .empty-btn { display: inline-block; padding: 11px 28px; background: #6B1E2E; color: #F7F0E3; border-radius: 10px; font-size: 13px; font-weight: 500; }
+  .empty-btn:hover { background: #8B2E3E; }
+</style>
+
+<div class="dash-wrap">
+  <div class="dash-header">
+    <div class="dash-title">Geçmiş</div>
+    <div class="dash-sub">{{ current_user.username }} adlı kullanıcının sorgu geçmişi</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">Toplam soru</div>
+      <div class="stat-val">{{ chats|length }}</div>
+      <div class="stat-sub">Tüm zamanlar</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Son sorgu</div>
+      <div class="stat-val" style="font-size: 15px; margin-top: 6px;">
+        {% if chats %}
+          {{ chats[0].created_at.strftime('%d.%m.%Y') }}
+        {% else %}
+          —
+        {% endif %}
+      </div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Durum</div>
+      <div class="stat-val" style="font-size: 15px; margin-top: 6px; color: #4CAF50;">Aktif</div>
+    </div>
+  </div>
+
+  {% if chats %}
+    <div class="history-header">
+      <div class="history-title">Sorgular</div>
+      <div class="history-count">{{ chats|length }} kayıt</div>
+    </div>
+    <div class="history-list">
+      {% for chat in chats %}
+      <div class="history-item">
+        <div class="history-num">#{{ loop.index }}</div>
+        <div class="history-content">
+          <div class="history-q">{{ chat.question }}</div>
+          <div class="history-a">{{ chat.answer }}</div>
+          <div class="history-meta">
+            <span class="history-date">{{ chat.created_at.strftime('%d.%m.%Y · %H:%M') }}</span>
+            <span class="history-badge">Türk hukuku</span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty">
+      <div class="empty-icon">⚖️</div>
+      <div class="empty-title">Henüz soru sorulmadı</div>
+      <div class="empty-sub">LexMind'a ilk sorunuzu sorarak başlayın.</div>
+      <a href="/chat" class="empty-btn">Sohbete başla</a>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}
