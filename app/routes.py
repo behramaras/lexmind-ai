@@ -59,25 +59,26 @@ def logout():
 @login_required
 def chat():
     answer = None
+    error = None
     if request.method == "POST":
         question = request.form.get("question")
-        
-        response = requests.post(OLLAMA_URL, json={
-            "model": MODEL,
-            "messages": [
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": question}
-            ],
-            "stream": False
-        })
-        
-        answer = response.json()["message"]["content"]
-        
-        chat = Chat(user_id=current_user.id, question=question, answer=answer)
-        db.session.add(chat)
-        db.session.commit()
+        try:
+            response = requests.post(OLLAMA_URL, json={
+                "model": MODEL,
+                "messages": [
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": question}
+                ],
+                "stream": False
+            }, timeout=60)
+            answer = response.json()["message"]["content"]
+            chat = Chat(user_id=current_user.id, question=question, answer=answer)
+            db.session.add(chat)
+            db.session.commit()
+        except Exception as e:
+            error = f"Hata: {str(e)}"
     
-    return render_template("chat.html", answer=answer)
+    return render_template("chat.html", answer=answer, error=error)
 
 @main.route("/history")
 @login_required
