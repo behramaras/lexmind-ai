@@ -52,6 +52,9 @@
   .typing-dot:nth-child(2) { animation-delay: 0.2s; }
   .typing-dot:nth-child(3) { animation-delay: 0.4s; }
   @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
+document.querySelectorAll('.msg.bot .bubble').forEach(el => {
+    el.innerHTML = marked.parse(el.innerText);
+});
 </style>
 
 <div class="chat-container">
