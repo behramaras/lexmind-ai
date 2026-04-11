@@ -77,8 +77,9 @@ def chat():
             db.session.commit()
         except Exception as e:
             error = f"Hata: {str(e)}"
-    
-    return render_template("chat.html", answer=answer, error=error)
+
+    chats = Chat.query.filter_by(user_id=current_user.id).order_by(Chat.created_at.asc()).all()
+    return render_template("chat.html", answer=answer, error=error, chats=chats)
 
 @main.route("/history")
 @login_required
