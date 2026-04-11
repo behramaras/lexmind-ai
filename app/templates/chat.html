@@ -85,17 +85,17 @@ document.querySelectorAll('.msg.bot .bubble').forEach(el => {
         <div class="bubble">Merhaba {{ current_user.username }}, ben LexMind. Türk hukuku hakkındaki sorularınızı yanıtlamak için buradayım. Size nasıl yardımcı olabilirim?</div>
       </div>
 
-      {% if answer %}
+      {% for chat in chats %}
       <div class="msg user">
         <span class="msg-who">Sen</span>
-        <div class="bubble">{{ request.form.get('question') }}</div>
+        <div class="bubble">{{ chat.question }}</div>
       </div>
       <div class="msg bot">
         <span class="msg-who">LexMind</span>
-        <div class="bubble">{{ answer }}</div>
+        <div class="bubble">{{ chat.answer }}</div>
         <span class="badge"><span class="badge-dot"></span>Bilgi amaçlıdır · hukuki tavsiye değildir</span>
       </div>
-      {% endif %}
+      {% endfor %}
 
       <div class="typing" id="typing">
         <div class="typing-bubble">
