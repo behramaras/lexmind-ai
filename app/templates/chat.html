@@ -60,17 +60,16 @@ document.querySelectorAll('.msg.bot .bubble').forEach(el => {
 <div class="chat-container">
   <div class="sidebar">
     <div class="sidebar-title">Konular</div>
-    <div class="topic active">İş Hukuku</div>
-    <div class="topic">Aile Hukuku</div>
-    <div class="topic">Ceza Hukuku</div>
-    <div class="topic">Kira & Taşınmaz</div>
-    <div class="topic">Tüketici Hakları</div>
-    <div class="topic">Miras Hukuku</div>
+    <div class="topic {% if topic == 'is' %}active{% endif %}" onclick="setTopic('is')">İş Hukuku</div>
+    <div class="topic {% if topic == 'aile' %}active{% endif %}" onclick="setTopic('aile')">Aile Hukuku</div>
+    <div class="topic {% if topic == 'ceza' %}active{% endif %}" onclick="setTopic('ceza')">Ceza Hukuku</div>
+    <div class="topic {% if topic == 'kira' %}active{% endif %}" onclick="setTopic('kira')">Kira & Taşınmaz</div>
+    <div class="topic {% if topic == 'tuketici' %}active{% endif %}" onclick="setTopic('tuketici')">Tüketici Hakları</div>
+    <div class="topic {% if topic == 'miras' %}active{% endif %}" onclick="setTopic('miras')">Miras Hukuku</div>
     <div class="sidebar-divider"></div>
-    <div class="topic">Genel Soru</div>
+    <div class="topic {% if topic == 'genel' %}active{% endif %}" onclick="setTopic('genel')">Genel Soru</div>
     <button class="new-chat-btn" onclick="window.location.href='/chat'">+ Yeni sohbet</button>
   </div>
-
   <div class="chat-main">
     <div class="chat-topbar">
       <div>
