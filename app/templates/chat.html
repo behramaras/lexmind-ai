@@ -107,6 +107,7 @@ document.querySelectorAll('.msg.bot .bubble').forEach(el => {
 
     <div class="input-area">
       <form method="POST" action="/chat" id="chat-form">
+        <input type="hidden" name="topic" id="topic-input" value="{{ topic }}" />
         <div class="input-row">
           <textarea class="input-box" name="question" placeholder="Hukuki sorunuzu yazın..." rows="1" id="input-box" required></textarea>
           <button class="send-btn" type="submit">
