@@ -139,6 +139,12 @@ document.querySelectorAll('.msg.bot .bubble').forEach(el => {
   });
 
   messages.scrollTop = messages.scrollHeight;
+
+  function setTopic(topic) {
+  document.getElementById('topic-input').value = topic;
+  document.querySelectorAll('.topic').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+}
 </script>
 
 {% endblock %}
