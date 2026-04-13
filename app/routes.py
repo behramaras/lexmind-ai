@@ -66,13 +66,18 @@ def logout():
 def chat():
     answer = None
     error = None
+    topic = request.args.get("topic", "genel")
+    
     if request.method == "POST":
         question = request.form.get("question")
+        topic = request.form.get("topic", "genel")
+        system_prompt = SYSTEM_PROMPTS.get(topic, SYSTEM_PROMPTS["genel"])
+        
         try:
             response = requests.post(OLLAMA_URL, json={
                 "model": MODEL,
                 "messages": [
-                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "system", "content": system_prompt},
                     {"role": "user", "content": question}
                 ],
                 "stream": False
@@ -85,7 +90,7 @@ def chat():
             error = f"Hata: {str(e)}"
 
     chats = Chat.query.filter_by(user_id=current_user.id).order_by(Chat.created_at.asc()).all()
-    return render_template("chat.html", answer=answer, error=error, chats=chats)
+    return render_template("chat.html", answer=answer, error=error, chats=chats, topic=topic)
 
 @main.route("/history")
 @login_required
