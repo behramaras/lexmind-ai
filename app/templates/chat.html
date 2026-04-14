@@ -4,7 +4,6 @@
 <style>
   .chat-container { display: flex; height: calc(100vh - 57px); }
 
-  /* SOL PANEL */
   .sidebar { width: 240px; background: #6B1E2E; padding: 20px 14px; display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
   .sidebar-title { font-size: 10px; color: #a07888; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; padding: 0 8px; }
   .topic { padding: 9px 12px; border-radius: 8px; font-size: 13px; color: #c8a0b8; cursor: pointer; transition: all 0.15s; }
@@ -14,14 +13,12 @@
   .new-chat-btn { margin-top: auto; padding: 10px 14px; background: #C8A96E; color: #6B1E2E; border: none; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; text-align: center; }
   .new-chat-btn:hover { background: #d8b97e; }
 
-  /* SAĞ PANEL */
   .chat-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
   .chat-topbar { padding: 14px 24px; background: #fff; border-bottom: 0.5px solid #d8cdb8; display: flex; align-items: center; justify-content: space-between; }
   .chat-topbar-title { font-size: 14px; font-weight: 500; color: #2a1810; }
   .chat-topbar-sub { font-size: 12px; color: #a09070; }
   .online-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #4CAF50; margin-right: 6px; }
 
-  /* MESAJLAR */
   .messages { flex: 1; padding: 24px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; background: #F7F0E3; }
   .msg { display: flex; flex-direction: column; gap: 5px; max-width: 75%; }
   .msg.user { align-self: flex-end; align-items: flex-end; }
@@ -33,7 +30,6 @@
   .badge { display: inline-flex; align-items: center; gap: 5px; margin-top: 6px; font-size: 11px; padding: 3px 12px; border-radius: 99px; background: #f0e8d8; color: #8B5E3C; border: 0.5px solid #d8c8a8; }
   .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: #C8A96E; }
 
-  /* INPUT */
   .input-area { padding: 16px 20px; border-top: 0.5px solid #d8cdb8; background: #fff; }
   .input-row { display: flex; gap: 10px; align-items: flex-end; }
   .input-box { flex: 1; padding: 12px 18px; border: 0.5px solid #c8b898; border-radius: 12px; font-size: 14px; background: #F7F0E3; color: #2a1810; font-family: 'Inter', sans-serif; resize: none; outline: none; line-height: 1.5; max-height: 120px; }
@@ -44,7 +40,6 @@
   .send-btn svg { width: 16px; height: 16px; fill: #F7F0E3; }
   .input-hint { font-size: 11px; color: #b0a080; margin-top: 8px; text-align: center; }
 
-  /* LOADING */
   .typing { display: none; align-self: flex-start; }
   .typing.show { display: flex; }
   .typing-bubble { background: #fff; border: 0.5px solid #d8cdb8; border-radius: 16px 16px 16px 4px; padding: 13px 18px; display: flex; gap: 4px; align-items: center; }
@@ -52,29 +47,27 @@
   .typing-dot:nth-child(2) { animation-delay: 0.2s; }
   .typing-dot:nth-child(3) { animation-delay: 0.4s; }
   @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
-document.querySelectorAll('.msg.bot .bubble').forEach(el => {
-    el.innerHTML = marked.parse(el.innerText);
-});
 </style>
 
 <div class="chat-container">
   <div class="sidebar">
     <div class="sidebar-title">Konular</div>
-    <div class="topic {% if topic == 'is' %}active{% endif %}" onclick="setTopic('is')">İş Hukuku</div>
-    <div class="topic {% if topic == 'aile' %}active{% endif %}" onclick="setTopic('aile')">Aile Hukuku</div>
-    <div class="topic {% if topic == 'ceza' %}active{% endif %}" onclick="setTopic('ceza')">Ceza Hukuku</div>
-    <div class="topic {% if topic == 'kira' %}active{% endif %}" onclick="setTopic('kira')">Kira & Taşınmaz</div>
-    <div class="topic {% if topic == 'tuketici' %}active{% endif %}" onclick="setTopic('tuketici')">Tüketici Hakları</div>
-    <div class="topic {% if topic == 'miras' %}active{% endif %}" onclick="setTopic('miras')">Miras Hukuku</div>
+    <div class="topic {% if topic == 'is' %}active{% endif %}" onclick="setTopic('is', this)">İş Hukuku</div>
+    <div class="topic {% if topic == 'aile' %}active{% endif %}" onclick="setTopic('aile', this)">Aile Hukuku</div>
+    <div class="topic {% if topic == 'ceza' %}active{% endif %}" onclick="setTopic('ceza', this)">Ceza Hukuku</div>
+    <div class="topic {% if topic == 'kira' %}active{% endif %}" onclick="setTopic('kira', this)">Kira & Taşınmaz</div>
+    <div class="topic {% if topic == 'tuketici' %}active{% endif %}" onclick="setTopic('tuketici', this)">Tüketici Hakları</div>
+    <div class="topic {% if topic == 'miras' %}active{% endif %}" onclick="setTopic('miras', this)">Miras Hukuku</div>
     <div class="sidebar-divider"></div>
-    <div class="topic {% if topic == 'genel' %}active{% endif %}" onclick="setTopic('genel')">Genel Soru</div>
-    <button class="new-chat-btn" onclick="window.location.href='/chat'">+ Yeni sohbet</button>
+    <div class="topic {% if topic == 'genel' %}active{% endif %}" onclick="setTopic('genel', this)">Genel Soru</div>
+    <button class="new-chat-btn" onclick="clearChat()">+ Yeni sohbet</button>
   </div>
+
   <div class="chat-main">
     <div class="chat-topbar">
       <div>
         <div class="chat-topbar-title">LexMind</div>
-        <div class="chat-topbar-sub"><span class="online-dot"></span>Türk hukuku bilgi asistanı</div>
+        <div class="chat-topbar-sub" id="topbar-sub"><span class="online-dot"></span>Türk hukuku bilgi asistanı</div>
       </div>
     </div>
 
@@ -120,11 +113,18 @@ document.querySelectorAll('.msg.bot .bubble').forEach(el => {
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
 <script>
   const form = document.getElementById('chat-form');
   const typing = document.getElementById('typing');
   const messages = document.getElementById('messages');
   const inputBox = document.getElementById('input-box');
+
+  const topicLabels = {
+    'is': 'İş Hukuku', 'aile': 'Aile Hukuku', 'ceza': 'Ceza Hukuku',
+    'kira': 'Kira & Taşınmaz', 'tuketici': 'Tüketici Hakları',
+    'miras': 'Miras Hukuku', 'genel': 'Genel Soru'
+  };
 
   form.addEventListener('submit', () => {
     typing.classList.add('show');
@@ -140,11 +140,26 @@ document.querySelectorAll('.msg.bot .bubble').forEach(el => {
 
   messages.scrollTop = messages.scrollHeight;
 
-  function setTopic(topic) {
-  document.getElementById('topic-input').value = topic;
-  document.querySelectorAll('.topic').forEach(t => t.classList.remove('active'));
-  event.target.classList.add('active');
-}
+  function setTopic(topic, el) {
+    document.getElementById('topic-input').value = topic;
+    document.querySelectorAll('.topic').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('topbar-sub').innerHTML =
+      '<span class="online-dot"></span>' + topicLabels[topic] + ' · Türk hukuku bilgi asistanı';
+  }
+
+  function clearChat() {
+    messages.innerHTML = `
+      <div class="msg bot">
+        <span class="msg-who">LexMind</span>
+        <div class="bubble">Yeni sohbet başlatıldı. Size nasıl yardımcı olabilirim?</div>
+      </div>
+    `;
+  }
+
+  document.querySelectorAll('.msg.bot .bubble').forEach(el => {
+    el.innerHTML = marked.parse(el.innerText);
+  });
 </script>
 
 {% endblock %}
