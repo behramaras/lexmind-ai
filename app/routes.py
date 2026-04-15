@@ -28,16 +28,26 @@ def register():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-        
+        password_confirm = request.form.get("password_confirm")
+
+        if len(username) < 3:
+            return render_template("register.html", error="Kullanıcı adı en az 3 karakter olmalı.")
+
+        if len(password) < 6:
+            return render_template("register.html", error="Şifre en az 6 karakter olmalı.")
+
+        if password != password_confirm:
+            return render_template("register.html", error="Şifreler eşleşmiyor.")
+
         if User.query.filter_by(username=username).first():
             return render_template("register.html", error="Bu kullanıcı adı zaten alınmış.")
-        
+
         hashed_password = generate_password_hash(password)
         user = User(username=username, password=hashed_password)
         db.session.add(user)
         db.session.commit()
         return redirect(url_for("main.login"))
-    
+
     return render_template("register.html")
 
 @main.route("/login", methods=["GET", "POST"])
