@@ -3,6 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
 from app.models import User, Chat
+from app.masking import mask
 import requests
 
 main = Blueprint("main", __name__)
@@ -84,11 +85,13 @@ def chat():
         system_prompt = SYSTEM_PROMPTS.get(topic, SYSTEM_PROMPTS["genel"])
         
         try:
+            masked_question, personal_data = mask(question)
+
             response = requests.post(OLLAMA_URL, json={
                 "model": MODEL,
                 "messages": [
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": question}
+                    {"role": "user", "content": masked_question}
                 ],
                 "stream": False
             }, timeout=60)
