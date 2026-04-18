@@ -96,7 +96,13 @@ def chat():
                 "stream": False
             }, timeout=60)
             answer = response.json()["message"]["content"]
-            chat = Chat(user_id=current_user.id, question=question, answer=answer)
+            chat = Chat(
+                user_id=current_user.id,
+                question=question,
+                masked_question=masked_question,
+                answer=answer
+            )
+            chat.set_personal_data(personal_data)
             db.session.add(chat)
             db.session.commit()
         except Exception as e:
