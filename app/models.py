@@ -1,6 +1,7 @@
 from app import db, login_manager
 from flask_login import UserMixin
 from datetime import datetime
+import json
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -17,5 +18,16 @@ class Chat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     question = db.Column(db.Text, nullable=False)
+    masked_question = db.Column(db.Text, nullable=True)
     answer = db.Column(db.Text, nullable=False)
+    personal_data = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def set_personal_data(self, data):
+        self.personal_data = json.dumps(data, ensure_ascii=False)
+
+    def get_personal_data(self):
+        if self.personal_data:
+            return json.loads(self.personal_data)
+        return {}
+    
