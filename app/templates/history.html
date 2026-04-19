@@ -37,6 +37,15 @@
   .empty-sub { font-size: 13px; color: #906050; margin-bottom: 24px; }
   .empty-btn { display: inline-block; padding: 11px 28px; background: #6B1E2E; color: #F7F0E3; border-radius: 10px; font-size: 13px; font-weight: 500; }
   .empty-btn:hover { background: #8B2E3E; }
+
+  .masked-data { margin-top: 12px; padding: 12px; background: #fdf5f0; border: 0.5px solid #e8c8b8; border-radius: 8px; display: none; }
+  .masked-data.open { display: block; }
+  .masked-title { font-size: 11px; color: #8B3E2E; font-weight: 500; margin-bottom: 8px; letter-spacing: 0.03em; text-transform: uppercase; }
+  .masked-list { display: flex; flex-direction: column; gap: 4px; }
+  .masked-item { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .masked-token { background: #e8d0c8; color: #6B1E2E; padding: 2px 8px; border-radius: 4px; font-family: monospace; }
+  .masked-arrow { color: #b0a080; }
+  .masked-value { color: #2a1810; font-family: monospace; }
 </style>
 
 <div class="dash-wrap">
@@ -73,30 +82,37 @@
       <div class="history-count">{{ chats|length }} kayıt</div>
     </div>
     <div class="history-list">
-      {% for chat in chats %}
-      <div class="history-item" onclick="toggle(this)">
-        <div class="history-num">#{{ loop.index }}</div>
-        <div class="history-content">
-          <div class="history-q">{{ chat.question }}</div>
-          <div class="history-a markdown-body">{{ chat.answer }}</div>
-          <div class="history-meta">
-            <span class="history-date">{{ chat.created_at.strftime('%d.%m.%Y · %H:%M') }}</span>
-            <span class="history-badge">Türk hukuku</span>
-          </div>
+{% for chat in chats %}
+<div class="history-item" onclick="toggle(this)">
+  <div class="history-num">#{{ loop.index }}</div>
+  <div class="history-content">
+    <div class="history-q">{{ chat.question }}</div>
+    <div class="history-a markdown-body">{{ chat.answer }}</div>
+    {% if chat.get_personal_data() %}
+    <div class="masked-data">
+      <div class="masked-title">Maskelenen kişisel veriler</div>
+      <div class="masked-list">
+        {% for token, value in chat.get_personal_data().items() %}
+        <div class="masked-item">
+          <span class="masked-token">{{ token }}</span>
+          <span class="masked-arrow">→</span>
+          <span class="masked-value">{{ value }}</span>
         </div>
-        <div class="history-arrow">▾</div>
+        {% endfor %}
       </div>
-      {% endfor %}
     </div>
-  {% else %}
-    <div class="empty">
-      <div class="empty-icon">⚖️</div>
-      <div class="empty-title">Henüz soru sorulmadı</div>
-      <div class="empty-sub">LexMind'a ilk sorunuzu sorarak başlayın.</div>
-      <a href="/chat" class="empty-btn">Sohbete başla</a>
+    {% endif %}
+    <div class="history-meta">
+      <span class="history-date">{{ chat.created_at.strftime('%d.%m.%Y · %H:%M') }}</span>
+      <span class="history-badge">Türk hukuku</span>
+      {% if chat.get_personal_data() %}
+      <span class="history-badge" style="background:#f0d0d0;color:#8B1A1A;">{{ chat.get_personal_data()|length }} veri maskelendi</span>
+      {% endif %}
     </div>
-  {% endif %}
+  </div>
+  <div class="history-arrow">▾</div>
 </div>
+{% endfor %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
 <script>
@@ -107,8 +123,10 @@
   function toggle(el) {
     const answer = el.querySelector('.history-a');
     const arrow = el.querySelector('.history-arrow');
+    const maskedData = el.querySelector('.masked-data');
     answer.classList.toggle('open');
     arrow.classList.toggle('open');
+    if (maskedData) maskedData.classList.toggle('open');
   }
 </script>
 
