@@ -1,36 +1,71 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
   <title>LexMind</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #F7F0E3;
+      --bg-secondary: #fff;
+      --border: #d8cdb8;
+      --text: #2a1810;
+      --text-secondary: #906050;
+      --text-muted: #a09070;
+      --primary: #6B1E2E;
+      --primary-hover: #8B2E3E;
+      --gold: #C8A96E;
+      --input-bg: #F7F0E3;
+      --input-border: #c8b898;
+      --badge-bg: #f0e8d8;
+      --badge-color: #8B5E3C;
+      --nav-bg: #6B1E2E;
+      --nav-link: #c8a0a8;
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1008;
+      --bg-secondary: #2a1808;
+      --border: #3e2818;
+      --text: #e8d8c0;
+      --text-secondary: #a08060;
+      --text-muted: #806040;
+      --primary: #8B2E3E;
+      --primary-hover: #a03e4e;
+      --gold: #d8b97e;
+      --input-bg: #2a1808;
+      --input-border: #3e2818;
+      --badge-bg: #2a1808;
+      --badge-color: #c8a060;
+      --nav-bg: #0a0804;
+      --nav-link: #805040;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', sans-serif; background: #F7F0E3; color: #2a1810; min-height: 100vh; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.2s, color 0.2s; }
     a { text-decoration: none; color: inherit; }
 
-    /* NAV */
-    nav { background: #6B1E2E; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+    nav { background: var(--nav-bg); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
     .nav-logo { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; color: #F7F0E3; letter-spacing: 0.02em; }
-    .nav-logo-icon { width: 30px; height: 30px; border-radius: 8px; background: #C8A96E; display: flex; align-items: center; justify-content: center; }
-    .nav-logo-icon svg { width: 16px; height: 16px; fill: #6B1E2E; }
-    .nav-links { display: flex; gap: 6px; }
-    .nav-link { padding: 6px 14px; border-radius: 99px; font-size: 13px; color: #c8a0a8; transition: all 0.15s; }
+    .nav-logo-icon { width: 30px; height: 30px; border-radius: 8px; background: var(--gold); display: flex; align-items: center; justify-content: center; }
+    .nav-logo-icon svg { width: 16px; height: 16px; fill: var(--nav-bg); }
+    .nav-right { display: flex; align-items: center; gap: 6px; }
+    .nav-link { padding: 6px 14px; border-radius: 99px; font-size: 13px; color: var(--nav-link); transition: all 0.15s; }
     .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.12); color: #F7F0E3; }
 
-    /* FLASH MESSAGES */
+    .theme-btn { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.1); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-left: 8px; }
+    .theme-btn svg { width: 16px; height: 16px; fill: #F7F0E3; }
+
     .flash { padding: 12px 24px; font-size: 13px; text-align: center; }
     .flash.error { background: #f0d0d0; color: #8B1A1A; }
     .flash.success { background: #d0e8d0; color: #1A5C1A; }
 
-    /* FOOTER */
-    footer { text-align: center; padding: 16px; font-size: 11px; color: #a09070; border-top: 0.5px solid #d8cdb8; margin-top: auto; }
+    footer { text-align: center; padding: 16px; font-size: 11px; color: var(--text-muted); border-top: 0.5px solid var(--border); margin-top: auto; }
   </style>
 </head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
 <body>
   <nav>
     <a href="/" class="nav-logo">
@@ -39,15 +74,20 @@
       </div>
       LexMind
     </a>
-    <div class="nav-links">
-      {% if current_user.is_authenticated %}
-        <a href="/chat" class="nav-link {% if request.path == '/chat' %}active{% endif %}">Sohbet</a>
-        <a href="/history" class="nav-link {% if request.path == '/history' %}active{% endif %}">Geçmiş</a>
-        <a href="/logout" class="nav-link">Çıkış</a>
-      {% else %}
-        <a href="/login" class="nav-link {% if request.path == '/login' %}active{% endif %}">Giriş</a>
-        <a href="/register" class="nav-link {% if request.path == '/register' %}active{% endif %}">Kayıt ol</a>
-      {% endif %}
+    <div class="nav-right">
+      <div class="nav-links" style="display:flex;gap:6px;">
+        {% if current_user.is_authenticated %}
+          <a href="/chat" class="nav-link {% if request.path == '/chat' %}active{% endif %}">Sohbet</a>
+          <a href="/history" class="nav-link {% if request.path == '/history' %}active{% endif %}">Geçmiş</a>
+          <a href="/logout" class="nav-link">Çıkış</a>
+        {% else %}
+          <a href="/login" class="nav-link {% if request.path == '/login' %}active{% endif %}">Giriş</a>
+          <a href="/register" class="nav-link {% if request.path == '/register' %}active{% endif %}">Kayıt ol</a>
+        {% endif %}
+      </div>
+      <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">
+        <svg id="theme-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
     </div>
   </nav>
 
@@ -58,5 +98,24 @@
   {% block content %}{% endblock %}
 
   <footer>LexMind · Türk Hukuku Bilgi Asistanı · Hukuki tavsiye vermez</footer>
+
+  <script>
+    const sunIcon = `<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:#F7F0E3"><path d="M12 4a1 1 0 0 1 1 1v1a1 1 0 0 1-2 0V5a1 1 0 0 1 1-1zm0 13a1 1 0 0 1 1 1v1a1 1 0 0 1-2 0v-1a1 1 0 0 1 1-1zm9-5a1 1 0 0 1-1 1h-1a1 1 0 0 1 0-2h1a1 1 0 0 1 1 1zM4 12a1 1 0 0 1-1 1H2a1 1 0 0 1 0-2h1a1 1 0 0 1 1 1zm14.66-6.24a1 1 0 0 1 0 1.42l-.71.7a1 1 0 1 1-1.41-1.41l.7-.71a1 1 0 0 1 1.42 0zM6.34 17.66a1 1 0 0 1 0 1.41l-.71.71a1 1 0 1 1-1.41-1.42l.71-.7a1 1 0 0 1 1.41 0zm12.32 1.41a1 1 0 0 1-1.41 0l-.71-.71a1 1 0 0 1 1.42-1.41l.7.71a1 1 0 0 1 0 1.41zM6.34 6.34a1 1 0 0 1-1.41 0l-.71-.7A1 1 0 0 1 5.63 4.22l.71.71a1 1 0 0 1 0 1.41zM12 7a5 5 0 1 0 0 10A5 5 0 0 0 12 7z"/></svg>`;
+    const moonIcon = `<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:#F7F0E3"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      document.getElementById('theme-btn').innerHTML = theme === 'dark' ? sunIcon : moonIcon;
+      localStorage.setItem('theme', theme);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      applyTheme(current === 'dark' ? 'light' : 'dark');
+    }
+
+    const saved = localStorage.getItem('theme') || 'light';
+    applyTheme(saved);
+  </script>
 </body>
 </html>
