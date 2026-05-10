@@ -1,6 +1,3 @@
-```markdown
-# LexMind AI
-
 LexMind is a Turkish legal information assistant powered by local AI models via Ollama. It allows users to ask questions about Turkish law and receive clear, informative answers — all running locally without sending data to external servers.
 
 > **Disclaimer:** LexMind provides general legal information only. It is not a substitute for professional legal advice.
